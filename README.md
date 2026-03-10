@@ -1,8 +1,15 @@
 The Legend of SOLDA
 
 The Devourer of Liquidity
+---
+
+## Gameplay Video
 
 https://youtu.be/ewmwLOpgIKI?si=6-ugZOMDB7AAm30-
+
+---
+
+Screenshots 
 
 A retro-inspired action adventure built during the MONOLITH radiants DAO Solana Mobile Hackathon.
 
@@ -27,7 +34,7 @@ Story
 
 Across the digital realm stand the Trees of Liquidity, each representing a blockchain ecosystem.
 
-A dark force known as Binandorf – The Devourer of Chains has begun draining their liquidity, corrupting the guardians that once protected them.
+A dark force known as Binandorf – The Devourer of Liquidity has begun draining their liquidity, corrupting the guardians that once protected them.
 
 Only the Seeker can restore the balance.
 
@@ -97,4 +104,4 @@ Prototype – built for hackathon submission.
 
 Author
 
-Created by an independent developer experimenting with AI-assisted game development.
+Created by an independent developer SrSanchez experimenting with AI-assisted game development.
