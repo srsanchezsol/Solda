@@ -2,7 +2,7 @@ The Legend of SOLDA
 
 The Devourer of Liquidity
 
-A retro-inspired action adventure built during the Solana Mobile Hackathon.
+A retro-inspired action adventure built during the MONONILITH radiants DAO Solana Mobile Hackathon.
 
 Inspired by classic 16-bit games like The Legend of Zelda, SOLDA introduces a blockchain-themed world where corrupted liquidity threatens the balance of multiple chains.
 
