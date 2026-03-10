@@ -1,6 +1,6 @@
 The Legend of SOLDA
 
-The Devourer of Chains
+The Devourer of Liquidity
 
 A retro-inspired action adventure built during the Solana Mobile Hackathon.
 
