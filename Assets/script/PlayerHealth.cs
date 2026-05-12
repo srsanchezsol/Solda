@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("Health")]
     public int maxHealth = 3;
@@ -23,36 +22,61 @@ public class PlayerHealth : MonoBehaviour
     private bool isInvulnerable = false;
 
     [Header("Knockback")]
-    public float knockbackForce = 2f;
+    public float knockbackForce = 4f;
     public float knockbackDuration = 0.10f;
+
+    [Header("Respawn")]
+    public Transform respawnPoint;
+    public float deathDelay = 0.4f;
+
+    [Header("Respawn Camera")]
+    public BoxCollider2D respawnCameraBounds;
+
+    [Header("Death FX")]
+    public GameObject deathPoofPrefab;
+    public ScreenFade screenFade;
+
+    [Header("Death Audio")]
+    public AudioSource audioSource;
+    public AudioClip deathSfx;
 
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
+    private PlayerController playerController;
+
     private bool isKnockedBack = false;
+    private bool isDead = false;
 
     void Start()
     {
         currentHealth = maxHealth;
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        playerController = GetComponent<PlayerController>();
+
+        if (screenFade == null)
+            screenFade = FindFirstObjectByType<ScreenFade>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
         UpdateHearts();
     }
 
     public void TakeDamage(int damage, Vector2 hitDirection)
     {
-        if (isInvulnerable)
+        if (isInvulnerable || isDead)
             return;
 
         currentHealth -= damage;
-
-        if (currentHealth < 0)
-            currentHealth = 0;
+        if (currentHealth < 0) currentHealth = 0;
 
         UpdateHearts();
 
         if (currentHealth <= 0)
         {
-            Die();
+            StartCoroutine(DieRoutine());
             return;
         }
 
@@ -62,24 +86,19 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount)
     {
-        currentHealth += amount;
+        if (isDead) return;
 
-        if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
 
         UpdateHearts();
     }
 
     void UpdateHearts()
     {
-        if (heart1 != null)
-            heart1.sprite = currentHealth >= 1 ? fullHeart : emptyHeart;
-
-        if (heart2 != null)
-            heart2.sprite = currentHealth >= 2 ? fullHeart : emptyHeart;
-
-        if (heart3 != null)
-            heart3.sprite = currentHealth >= 3 ? fullHeart : emptyHeart;
+        if (heart1 != null) heart1.sprite = currentHealth >= 1 ? fullHeart : emptyHeart;
+        if (heart2 != null) heart2.sprite = currentHealth >= 2 ? fullHeart : emptyHeart;
+        if (heart3 != null) heart3.sprite = currentHealth >= 3 ? fullHeart : emptyHeart;
     }
 
     IEnumerator InvulnerabilityRoutine()
@@ -94,8 +113,10 @@ public class PlayerHealth : MonoBehaviour
             {
                 spriteRenderer.enabled = false;
                 yield return new WaitForSeconds(0.08f);
+
                 spriteRenderer.enabled = true;
                 yield return new WaitForSeconds(0.08f);
+
                 timer += 0.16f;
             }
 
@@ -127,10 +148,69 @@ public class PlayerHealth : MonoBehaviour
         isKnockedBack = false;
     }
 
-    void Die()
+    IEnumerator DieRoutine()
     {
-        Debug.Log("Player died");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        isDead = true;
+        isInvulnerable = true;
+        isKnockedBack = false;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (playerController != null)
+            playerController.enabled = false;
+
+        if (deathPoofPrefab != null)
+            Instantiate(deathPoofPrefab, transform.position, Quaternion.identity);
+
+        if (audioSource != null && deathSfx != null)
+            audioSource.PlayOneShot(deathSfx);
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(deathDelay);
+
+        if (screenFade != null)
+            yield return StartCoroutine(screenFade.FadeOut());
+
+        Respawn();
+
+        yield return new WaitForSeconds(0.15f);
+
+        if (screenFade != null)
+            yield return StartCoroutine(screenFade.FadeIn());
+    }
+
+    void Respawn()
+    {
+        if (respawnPoint != null)
+            transform.position = respawnPoint.position;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        CameraFollow cameraFollow = Camera.main != null ? Camera.main.GetComponent<CameraFollow>() : null;
+
+        if (cameraFollow != null)
+        {
+            if (respawnCameraBounds != null)
+                cameraFollow.SetBounds(respawnCameraBounds);
+
+            cameraFollow.ForceSnapToPlayer();
+        }
+
+        currentHealth = maxHealth;
+        UpdateHearts();
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        if (playerController != null)
+            playerController.enabled = true;
+
+        isDead = false;
+        isInvulnerable = false;
     }
 
     public bool IsKnockedBack()

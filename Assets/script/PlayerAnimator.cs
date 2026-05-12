@@ -22,6 +22,29 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool("isAttacking", attacking);
     }
 
+    public void ForceDirection(Vector2 direction)
+    {
+        if (direction == Vector2.zero)
+            return;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+            lastMoveDirection = new Vector2(Mathf.Sign(direction.x), 0f);
+        else
+            lastMoveDirection = new Vector2(0f, Mathf.Sign(direction.y));
+
+        if (animator != null)
+        {
+            animator.SetFloat("lastMoveX", lastMoveDirection.x);
+            animator.SetFloat("lastMoveY", lastMoveDirection.y);
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("moveX", 0f);
+            animator.SetFloat("moveY", 0f);
+        }
+
+        if (Mathf.Abs(lastMoveDirection.x) > 0.01f && spriteRenderer != null)
+            spriteRenderer.flipX = lastMoveDirection.x < 0;
+    }
+
     public void UpdateAnimation(Vector2 movement)
     {
         if (isAttacking)
@@ -48,15 +71,16 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
-        animator.SetBool("isWalking", isWalking);
-        animator.SetFloat("moveX", moveX);
-        animator.SetFloat("moveY", moveY);
-        animator.SetFloat("lastMoveX", lastMoveDirection.x);
-        animator.SetFloat("lastMoveY", lastMoveDirection.y);
-
-        if (Mathf.Abs(lastMoveDirection.x) > 0.01f)
+        if (animator != null)
         {
-            spriteRenderer.flipX = lastMoveDirection.x < 0;
+            animator.SetBool("isWalking", isWalking);
+            animator.SetFloat("moveX", moveX);
+            animator.SetFloat("moveY", moveY);
+            animator.SetFloat("lastMoveX", lastMoveDirection.x);
+            animator.SetFloat("lastMoveY", lastMoveDirection.y);
         }
+
+        if (Mathf.Abs(lastMoveDirection.x) > 0.01f && spriteRenderer != null)
+            spriteRenderer.flipX = lastMoveDirection.x < 0;
     }
 }

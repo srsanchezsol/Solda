@@ -153,7 +153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 13.510986, y: -6.2247925}
+  m_AnchoredPosition: {x: 13.510986, y: -6.2248535}
   m_SizeDelta: {x: 1022.5012, y: 791.19995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &197795223
@@ -508,7 +508,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IntroManager
   image: {fileID: 1063498908}
   first: {fileID: 1943847493182871995, guid: dc2825a8095634103b8d390e25ba7bd1, type: 3}
-  second: {fileID: 4478197792508013724, guid: 718f0a06787cc456fa88d25f7c322575, type: 3}
+  second: {fileID: 3120294969833320875, guid: bbf4ca2d90b2f457c89d662d3152364b, type: 3}
+  firstDuration: 2
+  secondDuration: 2
+  nextSceneName: solda backup
+  allowTapToSkip: 1
 --- !u!4 &1883244700
 Transform:
   m_ObjectHideFlags: 0
@@ -518,7 +522,7 @@ Transform:
   m_GameObject: {fileID: 1883244698}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -278.85532, y: 30.80726, z: 0}
+  m_LocalPosition: {x: -438, y: -84, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

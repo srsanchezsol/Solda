@@ -15,6 +15,7 @@ public class LootBounce : MonoBehaviour
         {
             float randomX = Random.Range(-sidewaysForce, sidewaysForce);
             Vector2 bounce = new Vector2(randomX, upwardForce);
+
             rb.linearVelocity = bounce;
         }
     }

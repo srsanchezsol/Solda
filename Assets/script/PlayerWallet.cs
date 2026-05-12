@@ -6,7 +6,7 @@ public class PlayerWallet : MonoBehaviour
 
     public int totalCurrency = 0;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -15,11 +15,26 @@ public class PlayerWallet : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void AddCurrency(int amount)
     {
         totalCurrency += amount;
         Debug.Log("Total Currency: " + totalCurrency);
+    }
+
+    public bool SpendCurrency(int amount)
+    {
+        if (totalCurrency < amount)
+            return false;
+
+        totalCurrency -= amount;
+        return true;
+    }
+
+    public void ResetCurrency()
+    {
+        totalCurrency = 0;
     }
 }

@@ -4,6 +4,7 @@ public class BreakableObject : MonoBehaviour
 {
     [Header("Break Effect")]
     public GameObject breakEffect;
+    public AudioClip breakSound;
 
     [Header("Loot")]
     public GameObject blueGemPrefab;
@@ -16,9 +17,18 @@ public class BreakableObject : MonoBehaviour
         if (isBroken) return;
         isBroken = true;
 
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = false;
+
         if (breakEffect != null)
         {
             Instantiate(breakEffect, transform.position, Quaternion.identity);
+        }
+
+        if (breakSound != null)
+        {
+            AudioSource.PlayClipAtPoint(breakSound, transform.position);
         }
 
         if (blueGemPrefab != null && Random.value <= dropChance)
